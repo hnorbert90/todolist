@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"> 
+
+  <div th:fragment="pagingStripe (pageObject)" class="pagination" th:if="${__${pageObject}__.totalPages gt 1}">
+
+    <ul class="pagination-stripe">
+      <li th:class="${__${pageObject}__.number eq 0} ? 'disabled' : ''">
+        <a th:if="${not __${pageObject}__.first}" th:href="@{${#httpServletRequest.requestURI}(page=${__${pageObject}__.number-1},size=${__${pageObject}__.size})}">Previous</a>
+        <a th:if="${__${pageObject}__.first}" href="javascript:void(0);">Previous</a>
+      </li>
+
+      <li>
+        <span th:if="${__${pageObject}__.number gt 3}">&nbsp;...&nbsp;</span>
+      </li>
+            
+      <li th:each="pageNo : ${#numbers.sequence(__${pageObject}__.number le 3 ? 0 : __${pageObject}__.number - 3, __${pageObject}__.number ge __${pageObject}__.totalPages - 4 ? __${pageObject}__.totalPages - 1 : __${pageObject}__.number + 3)}" th:class="${__${pageObject}__.number eq pageNo}? 'active' : ''">
+        <a th:if="${__${pageObject}__.number  eq pageNo}" href="javascript:void(0);" th:text="${pageNo + 1}" />
+        <a th:if="${not (__${pageObject}__.number eq pageNo)}" th:href="@{${#httpServletRequest.requestURI}(page=${pageNo},size=${__${pageObject}__.size})}" th:text="${pageNo + 1}" />
+      </li>
+            
+      <li>
+        <span th:if="${__${pageObject}__.number lt __${pageObject}__.totalPages - 4}">&nbsp;...&nbsp;</span>
+      </li>
+            
+      <li th:class="${__${pageObject}__.number + 1 ge __${pageObject}__.totalPages} ? 'disabled' : ''">
+        <a th:if="${not __${pageObject}__.last}" th:href="@{${#httpServletRequest.requestURI}(page=${__${pageObject}__.number+1},size=${__${pageObject}__.size})}">Next</a>
+        <a th:if="${__${pageObject}__.last}" href="javascript:void(0);">Next</a>
+      </li>
+    </ul>
+          
+  </div>
+
+</html>

@@ -1,0 +1,124 @@
+li{
+	display:inline-block;
+}
+
+.resultHead{
+	text-align:center;
+}
+th>a{
+	 text-decoration: none;
+	 color:blue;
+}
+.done,.delete,button,.pagination-stripe{
+	user-select:none;
+}
+.update {
+	background-color:rgba(0, 0, 0, 0.9);
+	border-radius:10px;
+	box-shadow: 10px 10px 5px #888888;
+	padding:20px;
+	position:absolute;
+	left:30%;
+	top:50%;
+	z-index:10;
+	text-align:center;
+}
+.update input{
+	padding:3px;
+	border-radius:3px;
+	height:20px;
+}
+.update input[type="number"],input[type="number"]{
+	width:50px;
+}
+
+span.exit{
+	color:red;
+	float:right;
+	display:inline-block;
+	cursor:pointer;
+}
+
+.modify{
+	background: none !important;
+    border: none;
+    padding: 0! important;
+    font-weight:bold;
+    font-size:1.2em;
+    outline: inherit !important;
+}
+.modify:hover,th>a:hover{
+	cursor:pointer;
+}
+
+input.deadline{
+	
+}
+
+#newTodo{
+	
+	padding:10px;
+	width:500px;
+	margin:auto;
+	text-align:center;
+	background-color:rgba(107,181, 88, 0.9);
+	border-radius:10px;
+	box-shadow: 10px 10px 5px #888888;
+	margin-top:25px;
+}
+
+input{
+	padding:2px;
+	height:20px;
+	margin:3px;
+}
+
+
+
+#todos {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    text-align:center;
+    margin:auto;
+}
+#todos th a{
+	 text-align:center;
+}
+
+.archive-archive{
+	font-size:1.5em;
+}
+#todos td, #todo th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    height:30px;
+}
+
+#todos tr:nth-child(even){background-color: #f2f2f2;}
+
+#todos tr:hover {background-color: #ddd;}
+
+#todos th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+    user-select:none;
+}
+
+a[id="true"]{
+	color:green;
+}
+
+a[id="false"]{
+	color:red;
+}
+
+a{
+	text-decoration:none;
+}
+.pagination-stripe{
+	width:100%;
+	text-align:center;
+}
