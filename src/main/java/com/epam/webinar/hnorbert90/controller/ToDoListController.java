@@ -98,19 +98,21 @@ public class ToDoListController {
 	}
 	
 	@RequestMapping(value = "/todo/new",method= RequestMethod.POST)
-	public String newTodo(@RequestParam("description") String description, @RequestParam("priority") int priority,@RequestParam(value="deadline" ,required = false) Date deadline) {
+	public String newTodo(@RequestParam("description") String description,@RequestParam("details") String details, @RequestParam("priority") int priority,@RequestParam(value="deadline" ,required = false) Date deadline) {
 		ToDo todo=new ToDo(description,priority);
 		todo.setDeadline(deadline);
+		todo.setDetails(details);
 		todoRepo.save(todo);
 		return "redirect:/todo";
 	}
 	
 	@RequestMapping(value = "/todo/update",method= RequestMethod.POST)
-	public String updateTodo(@RequestParam("description") String description, @RequestParam("priority") int priority,@RequestParam("id") Long id,@RequestParam(value="deadline" ,required = false) Date deadline) {
+	public String updateTodo(@RequestParam("description") String description,@RequestParam("details") String details, @RequestParam("priority") int priority,@RequestParam("id") Long id,@RequestParam(value="deadline" ,required = false) Date deadline) {
 		ToDo todo=todoRepo.findOne(id);
 		todo.setDescription(description);
 		todo.setPriority(priority);
 		todo.setDeadline(deadline);
+		todo.setDetails(details);
 		todoRepo.save(todo);
 		return "redirect:/todo";
 	}
@@ -185,6 +187,7 @@ public class ToDoListController {
 			converted.setDescription(todo.getDescription());
 			converted.setDone(todo.isDone());
 			converted.setPriority(todo.getPriority());
+			converted.setDetails(todo.getDetails());
 		return converted;
 	}
 	
@@ -210,6 +213,7 @@ public class ToDoListController {
 			converted.setDescription(archtodo.getDescription());
 			converted.setDone(archtodo.isDone());
 			converted.setPriority(archtodo.getPriority());
+			converted.setDetails(archtodo.getDetails());
 		return converted;
 	}
 	

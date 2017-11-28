@@ -12,24 +12,43 @@ th>a{
 .done,.delete,button,.pagination-stripe{
 	user-select:none;
 }
-.update {
+.update,.details-active {
 	background-color:rgba(0, 0, 0, 0.9);
 	border-radius:10px;
 	box-shadow: 10px 10px 5px #888888;
 	padding:20px;
 	position:absolute;
-	left:30%;
-	top:50%;
 	z-index:10;
-	text-align:center;
+}
+
+.details{
+	display:none;
+}
+textarea{
+	padding:10px;
+}
+.details-active{
+	color:white;
+	display:block;
 }
 .update input{
 	padding:3px;
 	border-radius:3px;
 	height:20px;
 }
-.update input[type="number"],input[type="number"]{
-	width:50px;
+
+label{
+	color:white;
+}
+.desc{
+	width:80px;
+}
+input[type="number"]{
+	width:30px;
+}
+
+input[type="date"]{
+	width:140px;
 }
 
 span.exit{
@@ -60,7 +79,6 @@ input.deadline{
 	padding:10px;
 	width:500px;
 	margin:auto;
-	text-align:center;
 	background-color:rgba(107,181, 88, 0.9);
 	border-radius:10px;
 	box-shadow: 10px 10px 5px #888888;

@@ -17,7 +17,8 @@ public class ToDoArchived {
 	private int priority;
 	private Date created;
 	private Date deadline;
-	private boolean done=false;;
+	private boolean done=false;
+	private String details;
 	
 	@PrePersist
 	  protected void onCreate() {
@@ -32,6 +33,14 @@ public class ToDoArchived {
 		super();
 		this.description = description;
 		this.priority = priority;
+	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
 	}
 
 	public Date getDeadline() {
