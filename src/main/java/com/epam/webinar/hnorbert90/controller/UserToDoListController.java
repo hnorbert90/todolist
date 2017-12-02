@@ -21,27 +21,29 @@ import com.epam.webinar.hnorbert90.domain.ToDo;
 import com.epam.webinar.hnorbert90.domain.ToDoArchived;
 import com.epam.webinar.hnorbert90.repository.ToDoArchivedRepository;
 import com.epam.webinar.hnorbert90.repository.ToDoRepository;
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.epam.webinar.hnorbert90.repository.UserRepository;
 
 
 
 @Controller
-public class ToDoListController {
+public class UserToDoListController {
 	@Autowired
 	private ToDoRepository todoRepo;
-	
+	@Autowired
+	private UserRepository userRepo;
 	@Autowired
 	private ToDoArchivedRepository todoArchivedRepo;
 	
 	@Value(value = "${todo.elementPerPage}")
 	private int elementPerPage;
 	
-	@RequestMapping(value = "/todo")
-	public String displayToDoList(Model model, Pageable page) {
+	@RequestMapping(value = "/{userId}/todo")
+	public String displayToDoList(Model model, Pageable page,@PathVariable("userId")Long userId) {
 		if (page.getPageSize() < 1 || page.getPageSize() > elementPerPage) {
 			page = new PageRequest(0, elementPerPage);
 		}
-		model.addAttribute("todolist", fillPage(page,todoRepo.findAllByOrderByDoneAscPriorityDesc(page)));
+		model.addAttribute("todolist", fillPage(page,todoRepo.findAllByUserId(page,userId)));
+		model.addAttribute("user",userRepo.findOne(userId));
 		return "todo-list";
 	}
 
@@ -54,8 +56,8 @@ public class ToDoListController {
 		return requestedPage= new PageImpl<ToDo>(todoList,page,requestedPage.getTotalElements());	
 	}
 
-	@RequestMapping(value = "/todo/orderbycreated")
-	public String displayToDoListOrderByCreated(Model model, Pageable page) {
+	@RequestMapping(value = "/{userId}/todo/orderbycreated")
+	public String displayToDoListOrderByCreated(Model model, Pageable page,@PathVariable("userId")Long userId) {
 		if (page.getPageSize() < 1 || page.getPageSize() > elementPerPage) {
 			page = new PageRequest(0, elementPerPage);
 		}
@@ -63,8 +65,8 @@ public class ToDoListController {
 		return "todo-list";
 	}
 	
-	@RequestMapping(value = "/todo/orderbycreateddesc")
-	public String displayToDoListOrderByCreatedDesc(Model model, Pageable page) {
+	@RequestMapping(value = "/{userId}/todo/orderbycreateddesc")
+	public String displayToDoListOrderByCreatedDesc(Model model, Pageable page,@PathVariable("userId")Long userId) {
 		if (page.getPageSize() < 1 || page.getPageSize() > elementPerPage) {
 			page = new PageRequest(0, elementPerPage);
 		}
@@ -72,8 +74,8 @@ public class ToDoListController {
 		return "todo-list";
 	}
 	
-	@RequestMapping(value = "/todo/orderbypriority")
-	public String displayToDoListOrderByPriority(Model model, Pageable page) {
+	@RequestMapping(value = "/{userId}/todo/orderbypriority")
+	public String displayToDoListOrderByPriority(Model model, Pageable page,@PathVariable("userId")Long userId) {
 		if (page.getPageSize() < 1 || page.getPageSize() > elementPerPage) {
 			page = new PageRequest(0, elementPerPage);
 		}
@@ -81,8 +83,8 @@ public class ToDoListController {
 		return "todo-list";
 	}
 	
-	@RequestMapping(value = "/todo/orderbyprioritydesc")
-	public String displayToDoListOrderByPriorityDesc(Model model, Pageable page) {
+	@RequestMapping(value = "/{userId}/todo/orderbyprioritydesc")
+	public String displayToDoListOrderByPriorityDesc(Model model, Pageable page,@PathVariable("userId")Long userId) {
 		if (page.getPageSize() < 1 || page.getPageSize() > elementPerPage) {
 			page = new PageRequest(0, elementPerPage);
 		}
@@ -90,62 +92,75 @@ public class ToDoListController {
 		return "todo-list";
 	}
 	
-	@RequestMapping(value = "/todo/edit/setdone/{id}")
-	public String setDone(@PathVariable Long id) {
+	@RequestMapping(value = "/{userId}/todo/edit/setdone/{id}")
+	public String setDone(@PathVariable Long id,@PathVariable("userId")Long userId) {
 		ToDo todo=todoRepo.findOne(id);
 		todo.setDone(!todo.isDone());
 		todoRepo.save(todo);
-		return "redirect:/todo";
+		return "redirect:/"+userId+"/todo";
 	}
 	
-	@RequestMapping(value = "/todo/new",method= RequestMethod.POST)
-	public String newTodo(@RequestParam("description") String description,@RequestParam("details") String details, @RequestParam("priority") int priority,@RequestParam(value="deadline" ,required = false) Date deadline) {
+	@RequestMapping(value = "/{userId}/todo/new",method= RequestMethod.POST)
+	public String newTodo(@RequestParam("description") String description,
+			@RequestParam("details") String details,
+			@RequestParam("priority") int priority,
+			@RequestParam(value="deadline",
+			required = false) Date deadline,
+			@PathVariable("userId")Long userId) {
 		ToDo todo=new ToDo(description,priority);
+		todo.setUser(userRepo.findOne(userId));
 		todo.setDeadline(deadline);
 		todo.setDetails(details);
 		todoRepo.save(todo);
-		return "redirect:/todo";
+		return "redirect:/"+userId+"/todo";
 	}
 	
-	@RequestMapping(value = "/todo/update",method= RequestMethod.POST)
-	public String updateTodo(@RequestParam("description") String description,@RequestParam("details") String details, @RequestParam("priority") int priority,@RequestParam("id") Long id,@RequestParam(value="deadline" ,required = false) Date deadline) {
+	@RequestMapping(value = "/{userId}/todo/update",method= RequestMethod.POST)
+	public String updateTodo(@RequestParam("description") String description,
+			@RequestParam("details") String details,
+			@RequestParam("priority") int priority,
+			@RequestParam("id") Long id,
+			@RequestParam(value="deadline" ,
+			required = false) Date deadline,
+			@PathVariable("userId")Long userId) {
 		ToDo todo=todoRepo.findOne(id);
 		todo.setDescription(description);
 		todo.setPriority(priority);
 		todo.setDeadline(deadline);
 		todo.setDetails(details);
 		todoRepo.save(todo);
-		return "redirect:/todo";
+		return "redirect:/"+userId+"/todo";
 	}
 	
-	@RequestMapping("/todo/edit/increasepriority/{id}")
-	public String increasePriority(@PathVariable("id") Long id) {
+	@RequestMapping("/{userId}/todo/edit/increasepriority/{id}")
+	public String increasePriority(@PathVariable("id") Long id,@PathVariable("userId")Long userId) {
 		ToDo todo=todoRepo.findOne(id);
 		todo.setPriority(todo.getPriority()+1);
 		todoRepo.save(todo);
-		return "redirect:/todo";
+		return "redirect:/"+userId+"/todo";
 	}
 	
-	@RequestMapping("/todo/edit/decreasepriority/{id}")
-	public String decreasePriority(@PathVariable("id") Long id) {
+	@RequestMapping("/{userId}/todo/edit/decreasepriority/{id}")
+	public String decreasePriority(@PathVariable("id") Long id,@PathVariable("userId")Long userId) {
 		ToDo todo=todoRepo.findOne(id);
 		todo.setPriority(todo.getPriority()-1);
 		todoRepo.save(todo);
-		return "redirect:/todo";
+		return "redirect:/"+userId+"/todo";
 	}
 	
-	@RequestMapping("/todo/delete/{id}")
-	public String deleteTodo(@PathVariable("id") Long id) {
+	@RequestMapping("/{userId}/todo/delete/{id}")
+	public String deleteTodo(@PathVariable("id") Long id,@PathVariable("userId")Long userId) {
 		todoRepo.delete(id);
-		return "redirect:/todo";
+		return "redirect:/"+userId+"/todo";
 	}
 	
-	@RequestMapping(value = "/todo/archived")
-	public String displayArchivedToDoList(Model model, Pageable page) {
+	@RequestMapping(value = "/{userId}/todo/archived")
+	public String displayArchivedToDoList(Model model, Pageable page,@PathVariable("userId")Long userId) {
 		if (page.getPageSize() < 1 || page.getPageSize() > elementPerPage) {
 			page = new PageRequest(0, elementPerPage);
 		}
 		model.addAttribute("todolist", fillPageArchived(page, todoArchivedRepo.findAllByOrderByDoneAscPriorityDesc(page)));
+		model.addAttribute("user",userRepo.findOne(userId));
 		return "todo-list";
 	}
 	
@@ -158,19 +173,19 @@ public class ToDoListController {
 		return requestedPage= new PageImpl<ToDoArchived>(todoList,page,requestedPage.getTotalElements());	
 	}
 	
-	@RequestMapping("/todo/archive/{id}")
-	public String archiveTodoById(@PathVariable("id") Long id) {
+	@RequestMapping("/{userId}/todo/archive/{id}")
+	public String archiveTodoById(@PathVariable("id") Long id,@PathVariable("userId")Long userId) {
 		todoArchivedRepo.save(convertToArchivedToDo(todoRepo.findOne(id)));
 		todoRepo.delete(id);
-		return "redirect:/todo";
+		return "redirect:/"+userId+"/todo";
 	}
 	
-	@RequestMapping("/todo/archive/done")
-	public String archiveAllDoneTodo() {
+	@RequestMapping("/{userId}/todo/archive/done")
+	public String archiveAllDoneTodo(@PathVariable("userId")Long userId) {
 		List<ToDo> doneTodos=todoRepo.findAllByDone(true);
 		todoArchivedRepo.save(convertToArchivedToDoList(doneTodos));
 		todoRepo.delete(doneTodos);
-		return "redirect:/todo";
+		return "redirect:/"+userId+"/todo";
 	}
 	
 	private List<ToDoArchived> convertToArchivedToDoList(List<ToDo> todo){
@@ -192,11 +207,13 @@ public class ToDoListController {
 		return converted;
 	}
 	
-	@RequestMapping("/todo/archived/restore/{id}")
-	public String restoreArchiveTodoById(@PathVariable("id") Long id) {
-		todoRepo.save(convertBackToToDo(todoArchivedRepo.findOne(id)));
+	@RequestMapping("/{userId}/todo/archived/restore/{id}")
+	public String restoreArchiveTodoById(@PathVariable("id") Long id,@PathVariable("userId")Long userId) {
+		ToDo todo = convertBackToToDo(todoArchivedRepo.findOne(id));
+		todo.setUser(userRepo.findOne(userId));
+		todoRepo.save(todo);
 		todoArchivedRepo.delete(id);
-		return "redirect:/todo/archived";
+		return "redirect:/"+userId+"/todo/archived";
 	}
 	
 	private List<ToDo> convertBackToToDoList(List<ToDoArchived> archTodo){

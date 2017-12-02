@@ -1,3 +1,6 @@
+String.prototype.contains = function(it) { 
+	return this.indexOf(it) != -1; 
+	};
 function perc2color(perc) {
 	var r, g, b = 0;
 	if(perc < 50) {
@@ -21,17 +24,24 @@ $(document).ready(function() {
 	}
 	
 	
-            if (window.location.pathname == "/todo/archived") {
-                $(".archive-archive").css("display", "block");
+            if (window.location.pathname.contains("/todo/archived")) {
+                $(".archive-archive").css("display", "table-cell");
                 $(".archive-active").css("display", "none");
+                $(".noArchiveFunction").css("display", "none");
+                $("#newTodo").css("display", "none");
+                $(".null").html('<td></td><td></td><td></td><td></td><td></td>');
                 console.log("archive");
 
             } else {
-                $(".archive-active").css("display", "block");
+                $(".archive-active").css("display", "table-cell");
                 $(".archive-archive").css("display", "none");
+                $(".noArchiveFunction").css("display", " table-cell");
+                $("#newTodo").css("display", "block");
                 console.log("active");
+                $(".null").html('<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>');
             }
-            $(".null").html('<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>');
+            
+            
 
             $("input.deadline").attr("min", new Date().toISOString().slice(0, 10));
             $("input.deadline").attr("value", new Date().toISOString().slice(0, 10));

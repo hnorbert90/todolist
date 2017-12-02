@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 
 @Entity
@@ -20,6 +21,9 @@ public class ToDoArchived {
 	private boolean done=false;
 	private String details;
 	
+	@ManyToOne
+	private User user;
+	
 	@PrePersist
 	  protected void onCreate() {
 	    created = new Date();
@@ -27,6 +31,14 @@ public class ToDoArchived {
 
 	public ToDoArchived() {
 		super();
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public ToDoArchived(String description, int priority) {

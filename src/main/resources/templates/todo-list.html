@@ -10,37 +10,37 @@
          <div class="resultHead">
             <h1>Todo list</h1>
             <div id="menu">
-               <a href="/todo">Active</a>
-               <a href="/todo/archived">Archived</a>
-               <a href="/todo/archive/done">Archive all done todo</a>
+               <a th:href="@{'~/'+${user.id}+'/todo'}">Active</a>
+               <a th:href="@{'~/'+${user.id}+'/todo/archived'}">Archived</a>
+               <a th:href="@{'~/'+${user.id}+'/todo/archive/done'}">Archive all done todo</a>
             </div>
          </div>
          <div class="todolist" th:if="${not #lists.isEmpty(todolist)}">
             <table id="todos">
                <tr>
                   <th>Description</th>
-                  <th>Priority <a href="/todo/orderbyprioritydesc" id="priority">↓</a>--<a href="/todo/orderbypriority" id="priority">↑</a></th>
-                  <th>Created <a href="/todo/orderbycreateddesc" id="created">↓</a>--<a href="/todo/orderbycreated" id="created">↑</a></th>
+                  <th>Priority <a th:href="@{'~/'+${user.id}+'/todo/orderbyprioritydesc'}" id="priority">↓</a>--<a th:href="@{'~/'+${user.id}+'/todo/orderbypriority'}" id="priority">↑</a></th>
+                  <th>Created <a th:href="@{'~/'+${user.id}+'/todo/orderbycreateddesc'}" id="created">↓</a>--<a th:href="@{'~/'+${user.id}+'/todo/orderbycreated'}" id="created">↑</a></th>
                   <th>Deadline</th>
-                  <th th:if="${#httpServletRequest.requestURI != '/todo/archived'}">Done</th>
-                  <th th:if="${#httpServletRequest.requestURI != '/todo/archived'}">Delete</th>
+                  <th class="noArchiveFunction">Done</th>
+                  <th class="noArchiveFunction">Delete</th>
                   <th>Archive</th>
-                  <th th:if="${#httpServletRequest.requestURI != '/todo/archived'}">Modify</th>
+                  <th class="noArchiveFunction">Modify</th>
                </tr>
                <tr th:each="todo : ${todolist.content}" th:id="${'todo-' + todo.id}" th:class="${''+todo.id}">
-                  <td class="description" ><span th:text="${todo.description}"></span></td>
+                  <td class="description" style="width:100px;"><span th:text="${todo.description}"></span></td>
                   <div th:id="'details'+${todo.id}" class="details" th:text="${todo.details}"></div>
-                  <td class="priority" th:value="${todo.priority}"><span><a th:href="${todo.priority !=null}?@{/todo/edit/increasepriority/}+(${todo.id})" id="increasepriority" th:text="${todo.priority lt 10}?'↑':''"> ↑ </a></span><span th:text="${todo.priority}"></span><span><a th:href="@{/todo/edit/decreasepriority/}+(${todo.id})" id="increasepriority" th:text="${todo.priority gt 0}?'↓':''"> ↓ </a></span></td>
-                  <td class="created" ><span th:text="${todo.created !=null}?${#dates.format(todo.created, 'yyyy MMM dd.')}:''"></span></td>
-                  <td class="deadline" ><span th:text="${todo.deadline !=null}?${#dates.format(todo.deadline, 'yyyy MMM dd.')}:''"></span></td>
-                  <td th:if="${#httpServletRequest.requestURI != '/todo/archived'}"><a class="done" th:id="${todo.done}" th:href="@{/todo/edit/setdone}+'/'+${todo.id}"><span th:text="${todo.done}?'✔':'no'"></span></a></td>
-                  <td th:if="${#httpServletRequest.requestURI != '/todo/archived'}"><a class="delete" th:href="@{/todo/delete/}+${todo.id}"><span>❌</span></a></td>
-                  <td  class="archive-active" style="display:none;"><a th:href="@{/todo/archive/}+${todo.id}"><span><img src="https://emoji.fileformat.info/gemoji/floppy_disk.png" alt="Gemoji image for :floppy_disk" style="width:32px;height:32px;"/></span></a></td>
-                  <td class="archive-archive" style="display:none;"><a th:href="@{/todo/archive/restore/}+${todo.id}"><span style="color:blue;">♻</span></a></td>
-                  <td th:if="${#httpServletRequest.requestURI != '/todo/archived'}"><button type="submit" class="modify" value="Modify" th:onclick="'setVisibleUpdateField(\'' + ${todo.id} + '\');'">✎</button></td>
+                  <td class="priority" th:value="${todo.priority}"><span><a th:href="${todo.priority !=null}?@{'~/'+${user.id}+'/todo/edit/increasepriority/'}+(${todo.id})" id="increasepriority" th:text="${todo.priority lt 10}?'↑':''"> ↑ </a></span><span th:text="${todo.priority}"></span><span><a th:href="@{'~/'+${user.id}+'/todo/edit/decreasepriority/'}+(${todo.id})" id="decreasepriority" th:text="${todo.priority gt 0}?'↓':''"> ↓ </a></span></td>
+                  <td class="created" style="width:100px;"><span th:text="${todo.created !=null}?${#dates.format(todo.created, 'yyyy MMM dd.')}:''"></span></td>
+                  <td class="deadline" style="width:100px;"><span th:text="${todo.deadline !=null}?${#dates.format(todo.deadline, 'yyyy MMM dd.')}:''"></span></td>
+                  <td class="noArchiveFunction"><a class="done " th:id="${todo.done}" th:href="@{'~/'+${user.id}+'/todo/edit/setdone/'}+${todo.id}"><span th:text="${todo.done}?'✔':'no'"></span></a></td>
+                  <td class="noArchiveFunction"><a class="delete " th:href="@{'~/'+${user.id}+'/todo/delete/'}+${todo.id}"><span>❌</span></a></td>
+                  <td class="archive-active" style="display:none;"><a th:href="@{'~/'+${user.id}+'/todo/archive/'}+${todo.id}"><span><img src="https://emoji.fileformat.info/gemoji/floppy_disk.png" alt="Gemoji image for :floppy_disk" style="width:32px;height:32px;"/></span></a></td>
+                  <td class="archive-archive " style="display:none;"><a th:href="@{'~/'+${user.id}+'/todo/archived/restore/'}+${todo.id}"><span style="color:blue;">♻</span></a></td>
+                  <td class="noArchiveFunction"><button type="submit" class="modify " value="Modify" th:onclick="'setVisibleUpdateField(\'' + ${todo.id} + '\');'">✎</button></td>
                   <div style="display:none;" th:id="'update'+${todo.id}" class="update">
                      <span class="exit" th:onclick="'setInVisibleUpdateField(\'' + ${todo.id} + '\');'">⮿</span>
-                     <form action="/todo/update" method="post">
+                     <form th:action="@{'~/'+${user.id}+'/todo/update'}"   method="post">
                         <input type="number" name="id" th:value="${todo.id}" style="display:none"/>
                         <input type="text" name="description" maxlength="10" class="desc" placeholder="Description" required="required" th:value="${todo.description}"/>
                         <label>Deadline</label>
@@ -59,11 +59,11 @@
          </div>
          <div th:replace="fragments/pagination :: pagingStripe(todolist)"></div>
       </div>
-      <div id="newTodo">
+      <div id="newTodo" >
          <span>
             <h3>Create new todo</h3>
          </span>
-         <form action="/todo/new" method="post">
+         <form th:action="@{'~/'+${user.id}+'/todo/new'}" method="post">
             <input type="text" name="description" maxlength="10" class="desc" placeholder="Description" required="required"/>
             <label>Deadline</label>
             <input type="date" class="deadline" name="deadline" value=""/>

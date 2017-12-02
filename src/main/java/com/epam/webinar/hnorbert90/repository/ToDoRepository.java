@@ -14,5 +14,7 @@ public interface ToDoRepository extends CrudRepository<ToDo, Long> {
 	Page<ToDo> findAllByOrderByPriority(Pageable pageable);
 	Page<ToDo> findAllByOrderByPriorityDesc(Pageable pageable);
 	Page<ToDo> findAllByOrderByDoneAscPriorityDesc(Pageable pageable);
+	Page<ToDo> findAllByUserId(Pageable pageable,Long userId);
 	List<ToDo> findAllByDone(boolean bool);
+	
 }
