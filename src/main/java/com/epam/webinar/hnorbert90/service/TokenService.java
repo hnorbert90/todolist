@@ -18,7 +18,7 @@ public class TokenService {
 	}
 
 	private Integer generateToken() {
-		return (int) (Math.random() * 10000000);
+		return (int) (Math.random() * Integer.MAX_VALUE);
 	}
 
 	public static boolean exchangeToken(String token) {
