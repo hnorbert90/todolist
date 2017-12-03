@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class ToDo {
@@ -21,6 +22,7 @@ public class ToDo {
 	private boolean done=false;
 	private String details;
 	@ManyToOne
+	@NotNull
 	private User user;
 	
 	@PrePersist

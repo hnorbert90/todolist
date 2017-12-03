@@ -1,11 +1,13 @@
 package com.epam.webinar.hnorbert90.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -14,10 +16,10 @@ public class User {
 	private Long id;
 	private String username;
 	private String email;
-	@OneToMany(mappedBy = "user")
-	private List<ToDo> todo;
-	@OneToMany(mappedBy = "user")
-	private List<ToDoArchived> ToDoArchived;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<ToDo> todo = new ArrayList<>();
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<ToDoArchived> ToDoArchived = new ArrayList<>();
 
 	public User() {
 	}

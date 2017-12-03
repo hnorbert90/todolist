@@ -20,7 +20,7 @@ $(document).ready(function() {
 	for(var i = 0; i < priority.length; i++)
 	{
 		priority.item(i).style.background=perc2color(100-priority.item(i).getAttribute("value")*10);
-		console.log($(".priority")[i]);//.css("background-color",perc2color(priority.item(i).attr("value")));
+		console.log($(".priority")[i]);
 	}
 	
 	
@@ -29,16 +29,21 @@ $(document).ready(function() {
                 $(".archive-active").css("display", "none");
                 $(".noArchiveFunction").css("display", "none");
                 $("#newTodo").css("display", "none");
-                $(".null").html('<td></td><td></td><td></td><td></td><td></td>');
+                $(".null").html('<td class="description"></td><td class="priority"></td><td class="created"></td><td class="deadline"><td></td>');
+                $(".decreasepriority").css("display", "none");
+                $(".increasepriority").css("display", "none");
+                $("#archivedbutton").css("background-color", "#066b0b");
                 console.log("archive");
 
             } else {
                 $(".archive-active").css("display", "table-cell");
                 $(".archive-archive").css("display", "none");
                 $(".noArchiveFunction").css("display", " table-cell");
-                $("#newTodo").css("display", "block");
+                $(".decreasepriority").css("display", "inline-block");
+                $(".increasepriority").css("display", "inline-block");
+                $("#activedbutton").css("background-color", "#066b0b");
                 console.log("active");
-                $(".null").html('<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>');
+                $(".null").html('<td class="description"></td><td class="priority"></td><td class="created"></td><td class="deadline"></td><td></td><td></td><td></td><td></td>');
             }
             
             

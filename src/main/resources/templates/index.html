@@ -3,9 +3,17 @@
 <head>
 <meta name="google-signin-client_id"
 	content="35578136108-q4vpbt1u0nbl2l9g55fg4v2p39h98pea.apps.googleusercontent.com" />
+	<link rel="stylesheet" type="text/css" media="all"  
+         href="../static/css/index.css"  th:href="@{/css/index.css}" />
+	<title>ToDo login</title>
 </head>
 <body>
+<div id="content"><div><h1>Todo list</h1><h1>Please login with your google account!</h1></div>
 <div id="my-signin2"></div>
+<br/>
+<a class="testlogin" href="#" onclick="testLogin();">Test login</a>
+</div>
+ 
   <script>
   var userEmail;
   var userName;
@@ -48,6 +56,21 @@
 				'onfailure' : onFailure
 			});
 		} 
+		
+		function testLogin(){
+			$.ajax({ 
+	 			   type: "GET",
+	 			   url: '/auth/requestToken',
+	 			   contentType: "plain/text",
+	 			  	async: false,
+	 			   success: function(token, textStatus, request){
+	 				  window.location.href = '/login/'+"testemail@test.com"+'/'+"Test User"+'/'+token;
+	 			   },
+	 			   error: function(){
+
+	 			   }
+	 			  });
+		}
 		
 	</script>
 	<script

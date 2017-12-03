@@ -37,7 +37,7 @@ public class loginController {
 				user.setUsername(name);
 			}
 			userRepo.save(user);
-			return "redirect:/" + userId + "/todo";
+			return "redirect:/" + userId + "/todo?order=default";
 		}
 		return "index";
 	}
