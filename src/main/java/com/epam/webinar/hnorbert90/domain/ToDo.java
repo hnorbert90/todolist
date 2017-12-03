@@ -40,6 +40,15 @@ public class ToDo {
 		this.priority = priority;
 	}
 
+	public ToDo(String description, int priority, Date deadline, String details, User user) {
+		super();
+		this.description = description;
+		this.priority = priority;
+		this.deadline = deadline;
+		this.details = details;
+		this.user = user;
+	}
+
 	public User getUser() {
 		return user;
 	}
@@ -98,6 +107,12 @@ public class ToDo {
 
 	public Long getId() {
 		return id;
+	}
+
+	@Override
+	public String toString() {
+		return "ToDo [id=" + id + ", description=" + description + ", priority=" + priority + ", created=" + created
+				+ ", deadline=" + deadline + ", done=" + done + ", details=" + details + ", user=" + user + "]";
 	}
 
 }

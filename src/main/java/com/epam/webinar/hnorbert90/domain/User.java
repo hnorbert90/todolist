@@ -75,4 +75,10 @@ public class User {
 		ToDoArchived = toDoArchived;
 	}
 
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", email=" + email + ", todo=" + todo + ", ToDoArchived="
+				+ ToDoArchived + "]";
+	}
+
 }

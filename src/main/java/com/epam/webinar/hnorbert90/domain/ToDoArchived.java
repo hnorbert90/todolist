@@ -101,4 +101,11 @@ public class ToDoArchived {
 		return id;
 	}
 
+	@Override
+	public String toString() {
+		return "ToDoArchived [id=" + id + ", description=" + description + ", priority=" + priority + ", created="
+				+ created + ", deadline=" + deadline + ", done=" + done + ", details=" + details + ", user=" + user
+				+ "]";
+	}
+
 }
