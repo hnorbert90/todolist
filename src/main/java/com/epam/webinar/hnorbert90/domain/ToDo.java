@@ -19,16 +19,16 @@ public class ToDo {
 	private int priority;
 	private Date created;
 	private Date deadline;
-	private boolean done=false;
+	private boolean done = false;
 	private String details;
 	@ManyToOne
 	@NotNull
 	private User user;
-	
+
 	@PrePersist
-	  protected void onCreate() {
-	    created = new Date();
-	  }
+	protected void onCreate() {
+		created = new Date();
+	}
 
 	public ToDo() {
 		super();
@@ -99,5 +99,5 @@ public class ToDo {
 	public Long getId() {
 		return id;
 	}
-	
+
 }

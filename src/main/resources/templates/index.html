@@ -1,82 +1,84 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">  
-<head>
-<meta name="google-signin-client_id"
-	content="35578136108-q4vpbt1u0nbl2l9g55fg4v2p39h98pea.apps.googleusercontent.com" />
-	<link rel="stylesheet" type="text/css" media="all"  
-         href="../static/css/index.css"  th:href="@{/css/index.css}" />
-	<title>ToDo login</title>
-</head>
-<body>
-<div id="content"><div><h1>Todo list</h1><h1>Please login with your google account!</h1></div>
-<div id="my-signin2"></div>
-<br/>
-<a class="testlogin" href="#" onclick="testLogin();">Test login</a>
-</div>
- 
-  <script>
-  var userEmail;
-  var userName;
-		function onSuccess(googleUser) {
-			console.log('Logged in as: '
-					+ googleUser.getBasicProfile().getName());
-			document.getElementById("my-signin2").innerHTML ="Logged in: "+ googleUser.getBasicProfile().getName();
- 			userEmail=googleUser.getBasicProfile().getEmail();
- 			userName=googleUser.getBasicProfile().getName();
- 			
- 	
-					
-					
-            
- 			$.ajax({ 
- 			   type: "GET",
- 			   url: '/auth/requestToken',
- 			   contentType: "plain/text",
- 			  	async: false,
- 			   success: function(token, textStatus, request){
- 				  window.location.href = '/login/'+userEmail+'/'+userName+'/'+token;
- 			   },
- 			   error: function(){
-
- 			   }
- 			  });
- 			
-		}
-		function onFailure(error) {
-			console.log(error);
-		}
-		function renderButton() {
-			gapi.signin2.render('my-signin2', {
-				'scope' : 'profile email',
-				'width' : 240,
-				'height' : 50,
-				'longtitle' : false,
-				'theme' : 'dark',
-				'onsuccess' : onSuccess,
-				'onfailure' : onFailure
-			});
-		} 
-		
-		function testLogin(){
-			$.ajax({ 
-	 			   type: "GET",
-	 			   url: '/auth/requestToken',
-	 			   contentType: "plain/text",
-	 			  	async: false,
-	 			   success: function(token, textStatus, request){
-	 				  window.location.href = '/login/'+"testemail@test.com"+'/'+"Test User"+'/'+token;
-	 			   },
-	 			   error: function(){
-
-	 			   }
-	 			  });
-		}
-		
-	</script>
-	<script
-		src="https://apis.google.com/js/platform.js?onload=renderButton"
-		async="defer">
-		</script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-</body>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta name="google-signin-client_id"
+      content="35578136108-q4vpbt1u0nbl2l9g55fg4v2p39h98pea.apps.googleusercontent.com" />
+    <link rel="stylesheet" type="text/css" media="all"  
+      href="../static/css/index.css"  th:href="@{/css/index.css}" />
+    <title>ToDo login</title>
+  </head>
+  <body>
+    <div id="content">
+      <div>
+        <h1>Todo list</h1>
+        <h1>Please login with your google account!</h1>
+      </div>
+      <div id="my-signin2"></div>
+      <br/>
+      <a class="testlogin" href="#" onclick="testLogin();">Test login</a>
+    </div>
+    <script>
+      var userEmail;
+      var userName;
+      function onSuccess(googleUser) {
+      	console.log('Logged in as: '
+      			+ googleUser.getBasicProfile().getName());
+      	document.getElementById("my-signin2").innerHTML ="Logged in: "+ googleUser.getBasicProfile().getName();
+      		userEmail=googleUser.getBasicProfile().getEmail();
+      		userName=googleUser.getBasicProfile().getName();
+      		
+      
+      			
+      			
+                
+      		$.ajax({ 
+      		   type: "GET",
+      		   url: '/auth/requestToken',
+      		   contentType: "plain/text",
+      		  	async: false,
+      		   success: function(token, textStatus, request){
+      			  window.location.href = '/login/'+userEmail+'/'+userName+'/'+token;
+      		   },
+      		   error: function(){
+      
+      		   }
+      		  });
+      		
+      }
+      function onFailure(error) {
+      	console.log(error);
+      }
+      function renderButton() {
+      	gapi.signin2.render('my-signin2', {
+      		'scope' : 'profile email',
+      		'width' : 240,
+      		'height' : 50,
+      		'longtitle' : false,
+      		'theme' : 'dark',
+      		'onsuccess' : onSuccess,
+      		'onfailure' : onFailure
+      	});
+      } 
+      
+      function testLogin(){
+      	$.ajax({ 
+      			   type: "GET",
+      			   url: '/auth/requestToken',
+      			   contentType: "plain/text",
+      			  	async: false,
+      			   success: function(token, textStatus, request){
+      				  window.location.href = '/login/'+"testemail@test.com"+'/'+"Test User"+'/'+token;
+      			   },
+      			   error: function(){
+      
+      			   }
+      			  });
+      }
+      
+    </script>
+    <script
+      src="https://apis.google.com/js/platform.js?onload=renderButton"
+      async="defer"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </body>
 </html>

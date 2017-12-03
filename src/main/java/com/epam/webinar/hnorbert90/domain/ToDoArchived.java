@@ -19,17 +19,17 @@ public class ToDoArchived {
 	private int priority;
 	private Date created;
 	private Date deadline;
-	private boolean done=false;
+	private boolean done = false;
 	private String details;
-	
+
 	@ManyToOne
 	@NotNull
 	private User user;
-	
+
 	@PrePersist
-	  protected void onCreate() {
-	    created = new Date();
-	  }
+	protected void onCreate() {
+		created = new Date();
+	}
 
 	public ToDoArchived() {
 		super();
@@ -100,5 +100,5 @@ public class ToDoArchived {
 	public Long getId() {
 		return id;
 	}
-	
+
 }

@@ -1,103 +1,102 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-   <head>
-   <meta name="google-signin-client_id"
-	content="35578136108-q4vpbt1u0nbl2l9g55fg4v2p39h98pea.apps.googleusercontent.com" />
-      <title>ToDo</title>
-      <link rel="stylesheet" type="text/css" media="all"  
-         href="../static/css/todo-list.css" th:href="@{/css/todo-list.css}" />
-   </head>
-   <body>
-      <div class="topnav">
-        <b> <a id="activedbutton" th:href="@{'~/'+${user.id}+'/todo?order=default'}">List active</a>
-         <a id="archivedbutton" th:href="@{'~/'+${user.id}+'/todo/archived?order=default'}">List archived</a>
-          <a onclick="newTodo();">➕ Add new</a>
-         <a  th:href="@{'~/'+${user.id}+'/todo/archive/done'}"><span><img src="https://emoji.fileformat.info/gemoji/floppy_disk.png" alt="Gemoji image for :floppy_disk" style="width:20px;height:20px;"/></span> Archive all done</a>
-         <a class="logout" href="#" onclick="signOut();">Logout</a></b>
-         <div class="logout">Logged in: <span th:text="${user.username}"></span></div>
+  <head>
+    <meta name="google-signin-client_id"
+      content="35578136108-q4vpbt1u0nbl2l9g55fg4v2p39h98pea.apps.googleusercontent.com" />
+    <title>ToDo</title>
+    <link rel="stylesheet" type="text/css" media="all"  
+      href="../static/css/todo-list.css" th:href="@{/css/todo-list.css}" />
+  </head>
+  <body>
+    <div class="topnav">
+      <b> <a id="activedbutton" th:href="@{'~/'+${user.id}+'/todo?order=default'}">List active</a>
+      <a id="archivedbutton" th:href="@{'~/'+${user.id}+'/todo/archived?order=default'}">List archived</a>
+      <a onclick="newTodo();">➕ Add new</a>
+      <a  th:href="@{'~/'+${user.id}+'/todo/archive/done'}"><span><img src="https://emoji.fileformat.info/gemoji/floppy_disk.png" alt="Gemoji image for :floppy_disk" style="width:20px;height:20px;"/></span> Archive all done</a>
+      <a class="logout" href="#" onclick="signOut();">Logout</a></b>
+      <div class="logout">Logged in: <span th:text="${user.username}"></span></div>
+    </div>
+    <div class="content">
+      <div class="todolist" th:if="${not #lists.isEmpty(todolist)}">
+        <table id="todos">
+          <tr>
+            <th>Description</th>
+            <th>Priority <a th:href="@{${#httpServletRequest.requestURI}+'?order=orderbyprioritydesc'}" id="priority">↓</a>--<a th:href="@{${#httpServletRequest.requestURI}+'?order=orderbypriorityasc'}" id="priority">↑</a></th>
+            <th>Created<br/> <a th:href="@{${#httpServletRequest.requestURI}+'?order=orderbycreateddesc'}" id="created">↓</a>--<a th:href="@{${#httpServletRequest.requestURI}+'?order=orderbycreatedasc'}" id="created">↑</a></th>
+            <th>Deadline<br/> <a th:href="@{${#httpServletRequest.requestURI}+'?order=orderbydeadlinedesc'}" id="deadline">↓</a>--<a th:href="@{${#httpServletRequest.requestURI}+'?order=orderbydeadlineasc'}" id="deadline">↑</a></th>
+            <th class="noArchiveFunction">Done</th>
+            <th class="noArchiveFunction">Delete</th>
+            <th>Archive</th>
+            <th class="noArchiveFunction">Modify</th>
+          </tr>
+          <tr th:each="todo : ${todolist.content}" th:id="${'todo-' + todo.id}" th:class="${''+todo.id}">
+            <td class="description"><span th:text="${todo.description}"></span></td>
+            <div th:id="'details'+${todo.id}" class="details" th:text="${todo.details}"></div>
+            <td class="priority" th:value="${todo.priority}"><span><a th:href="${todo.priority !=null}?@{'~/'+${user.id}+'/todo/edit/increasepriority/'}+(${todo.id})" class="increasepriority" th:text="${todo.priority lt 10}?'↑':''"> ↑ </a></span><span th:text="${todo.priority}"></span><span><a th:href="@{'~/'+${user.id}+'/todo/edit/decreasepriority/'}+(${todo.id})" class="decreasepriority" th:text="${todo.priority gt 0}?'↓':''"> ↓ </a></span></td>
+            <td class="created"><span th:text="${todo.created !=null}?${#dates.format(todo.created, 'yyyy MMM dd.')}:''"></span></td>
+            <td class="deadline"><span th:text="${todo.deadline !=null}?${#dates.format(todo.deadline, 'yyyy MMM dd.')}:''"></span></td>
+            <td class="noArchiveFunction"><a class="done " th:id="${todo.done}" th:href="@{'~/'+${user.id}+'/todo/edit/setdone/'}+${todo.id}"><span th:text="${todo.done}?'✔':'no'"></span></a></td>
+            <td class="noArchiveFunction"><a class="delete " th:href="@{'~/'+${user.id}+'/todo/delete/'}+${todo.id}"><span>❌</span></a></td>
+            <td class="archive-active" style="display:none;"><a th:href="@{'~/'+${user.id}+'/todo/archive/'}+${todo.id}"><span><img src="https://emoji.fileformat.info/gemoji/floppy_disk.png" alt="Gemoji image for :floppy_disk" style="width:32px;height:32px;"/></span></a></td>
+            <td class="archive-archive " style="display:none;"><a th:href="@{'~/'+${user.id}+'/todo/archived/restore/'}+${todo.id}"><span style="color:blue;">♻</span></a></td>
+            <td class="noArchiveFunction"><button type="submit" class="modify " value="Modify" th:onclick="'setVisibleUpdateField(\'' + ${todo.id} + '\');'">✎</button></td>
+            <div style="display:none;" th:id="'update'+${todo.id}" class="update">
+              <span class="exit" th:onclick="'setInVisibleUpdateField(\'' + ${todo.id} + '\');'">⮿</span>
+              <form th:action="@{'~/'+${user.id}+'/todo/update'}"   method="post">
+                <input type="number" name="id" th:value="${todo.id}" style="display:none"/>
+                <input type="text" name="description" maxlength="10" class="desc" placeholder="Description" required="required" th:value="${todo.description}"/>
+                <label>Deadline</label>
+                <input type="date" class="deadline" name="deadline" th:value="${todo.deadline}"/>
+                <label>Priority</label>
+                <input type="number" name="priority" th:value="${todo.priority}" required="required" min="0" max="10"/><br/>
+                <textarea rows="4" cols="50" name="details" th:text="${todo.details}"/>
+                <button type="submit" value="Update" th:onclick="'setInVisibleUpdateField(\'' + ${todo.id} + '\');'">Update</button>
+              </form>
+            </div>
+          </tr>
+        </table>
       </div>
-      <div class="content">
-         <div class="todolist" th:if="${not #lists.isEmpty(todolist)}">
-            <table id="todos">
-               <tr>
-                  <th>Description</th>
-                  <th>Priority <a th:href="@{${#httpServletRequest.requestURI}+'?order=orderbyprioritydesc'}" id="priority">↓</a>--<a th:href="@{${#httpServletRequest.requestURI}+'?order=orderbypriorityasc'}" id="priority">↑</a></th>
-                  <th>Created<br/> <a th:href="@{${#httpServletRequest.requestURI}+'?order=orderbycreateddesc'}" id="created">↓</a>--<a th:href="@{${#httpServletRequest.requestURI}+'?order=orderbycreatedasc'}" id="created">↑</a></th>
-                  <th>Deadline<br/> <a th:href="@{${#httpServletRequest.requestURI}+'?order=orderbydeadlinedesc'}" id="deadline">↓</a>--<a th:href="@{${#httpServletRequest.requestURI}+'?order=orderbydeadlineasc'}" id="deadline">↑</a></th>
-                  <th class="noArchiveFunction">Done</th>
-                  <th class="noArchiveFunction">Delete</th>
-                  <th>Archive</th>
-                  <th class="noArchiveFunction">Modify</th>
-               </tr>
-               <tr th:each="todo : ${todolist.content}" th:id="${'todo-' + todo.id}" th:class="${''+todo.id}">
-                  <td class="description"><span th:text="${todo.description}"></span></td>
-                  <div th:id="'details'+${todo.id}" class="details" th:text="${todo.details}"></div>
-                  <td class="priority" th:value="${todo.priority}"><span><a th:href="${todo.priority !=null}?@{'~/'+${user.id}+'/todo/edit/increasepriority/'}+(${todo.id})" class="increasepriority" th:text="${todo.priority lt 10}?'↑':''"> ↑ </a></span><span th:text="${todo.priority}"></span><span><a th:href="@{'~/'+${user.id}+'/todo/edit/decreasepriority/'}+(${todo.id})" class="decreasepriority" th:text="${todo.priority gt 0}?'↓':''"> ↓ </a></span></td>
-                  <td class="created"><span th:text="${todo.created !=null}?${#dates.format(todo.created, 'yyyy MMM dd.')}:''"></span></td>
-                  <td class="deadline"><span th:text="${todo.deadline !=null}?${#dates.format(todo.deadline, 'yyyy MMM dd.')}:''"></span></td>
-                  <td class="noArchiveFunction"><a class="done " th:id="${todo.done}" th:href="@{'~/'+${user.id}+'/todo/edit/setdone/'}+${todo.id}"><span th:text="${todo.done}?'✔':'no'"></span></a></td>
-                  <td class="noArchiveFunction"><a class="delete " th:href="@{'~/'+${user.id}+'/todo/delete/'}+${todo.id}"><span>❌</span></a></td>
-                  <td class="archive-active" style="display:none;"><a th:href="@{'~/'+${user.id}+'/todo/archive/'}+${todo.id}"><span><img src="https://emoji.fileformat.info/gemoji/floppy_disk.png" alt="Gemoji image for :floppy_disk" style="width:32px;height:32px;"/></span></a></td>
-                  <td class="archive-archive " style="display:none;"><a th:href="@{'~/'+${user.id}+'/todo/archived/restore/'}+${todo.id}"><span style="color:blue;">♻</span></a></td>
-                  <td class="noArchiveFunction"><button type="submit" class="modify " value="Modify" th:onclick="'setVisibleUpdateField(\'' + ${todo.id} + '\');'">✎</button></td>
-                  <div style="display:none;" th:id="'update'+${todo.id}" class="update">
-                     <span class="exit" th:onclick="'setInVisibleUpdateField(\'' + ${todo.id} + '\');'">⮿</span>
-                     <form th:action="@{'~/'+${user.id}+'/todo/update'}"   method="post">
-                        <input type="number" name="id" th:value="${todo.id}" style="display:none"/>
-                        <input type="text" name="description" maxlength="10" class="desc" placeholder="Description" required="required" th:value="${todo.description}"/>
-                        <label>Deadline</label>
-                        <input type="date" class="deadline" name="deadline" th:value="${todo.deadline}"/>
-                        <label>Priority</label>
-                        <input type="number" name="priority" th:value="${todo.priority}" required="required" min="0" max="10"/><br/>
-                        <textarea rows="4" cols="50" name="details" th:text="${todo.details}"/>
-                        <button type="submit" value="Update" th:onclick="'setInVisibleUpdateField(\'' + ${todo.id} + '\');'">Update</button>
-                     </form>
-                  </div>
-               </tr>
-            </table>
-         </div>
-         <div th:replace="fragments/pagination :: pagingStripe(todolist)"></div>
-      </div>
-     
-     
-          <div id="newTodo" >
-         <span>
-            <h3>Create new todo</h3>
-         </span>
-         <form th:action="@{'~/'+${user.id}+'/todo/new'}" method="post">
-            <input type="text" name="description" maxlength="10" class="desc" placeholder="Description" required="required"/>
-            <label>Deadline</label>
-            <input type="date" class="deadline" name="deadline" value=""/>
-            <label>Priority</label>
-            <input type="number" name="priority" value="1" required="required" min="0" max="10"/>
-            <textarea rows="4" cols="50" name="details" placeholder="Details..."/><br/>
-            <div><button type="submit" value="Add" id="add" style="float:left;">➕</button><button value="Cancel" onclick="newTodoClose();" style="float:right;margin-right:60px;">Cancel</button></div>
-         </form>
-      </div>
-      <script>
-         function setVisibleUpdateField(inputID){
-         	$('.update').css('display', 'none');
-         	$('#update'+inputID).css('display', 'block');
-         
-         };
-         
-         function setInVisibleUpdateField(inputID){
-          $('#update'+inputID).css('display', 'none');
-          };
-          
-          function signOut() {
-        	  document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://"+window.location.host;
-        	  }
-          function newTodo() {
-              $("#newTodo").css("display", "block");
-        	  }
-          function newTodoClose() {
-              $("#newTodo").css("display", "none");
-        	  }
-          
-      </script>		
-      <script src="https://apis.google.com/js/platform.js" async="defer"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-      <script type="text/javascript" th:src="@{/js/todo-list.js}"></script>
-   </body>
+      <div th:replace="fragments/pagination :: pagingStripe(todolist)"></div>
+    </div>
+    <div id="newTodo" >
+      <span>
+        <h3>Create new todo</h3>
+      </span>
+      <form th:action="@{'~/'+${user.id}+'/todo/new'}" method="post">
+        <input type="text" name="description" maxlength="10" class="desc" placeholder="Description" required="required"/>
+        <label>Deadline</label>
+        <input type="date" class="deadline" name="deadline" value=""/>
+        <label>Priority</label>
+        <input type="number" name="priority" value="1" required="required" min="0" max="10"/>
+        <textarea rows="4" cols="50" name="details" placeholder="Details..."/>
+        <br/>
+        <div><button type="submit" value="Add" id="add" style="float:left;">➕</button><button value="Cancel" onclick="newTodoClose();" style="float:right;margin-right:60px;">Cancel</button></div>
+      </form>
+    </div>
+    <script>
+      function setVisibleUpdateField(inputID){
+      	$('.update').css('display', 'none');
+      	$('#update'+inputID).css('display', 'block');
+      
+      };
+      
+      function setInVisibleUpdateField(inputID){
+       $('#update'+inputID).css('display', 'none');
+       };
+       
+       function signOut() {
+        document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://"+window.location.host;
+        }
+       function newTodo() {
+           $("#newTodo").css("display", "block");
+        }
+       function newTodoClose() {
+           $("#newTodo").css("display", "none");
+        }
+       
+    </script>		
+    <script src="https://apis.google.com/js/platform.js" async="defer"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/todo-list.js}"></script>
+  </body>
 </html>

@@ -84,7 +84,7 @@ input.deadline {
 }
 
 #newTodo {
-	display:none;
+	display: none;
 	padding: 10px;
 	width: 450px;
 	margin: auto;
@@ -93,8 +93,17 @@ input.deadline {
 	box-shadow: 10px 10px 5px #888888;
 	position: absolute;
 	z-index: 10;
-	top:30%;
-	left:30%;
+	top: 30%;
+	padding: 10px;
+	width: 450px;
+	margin: auto;
+	background-color: rgba(107, 181, 88, 0.9);
+	border-radius: 10px;
+	box-shadow: 10px 10px 5px #888888;
+	position: absolute;
+	z-index: 10;
+	top: 30%;
+	left: 30%;
 }
 
 input {
@@ -123,18 +132,20 @@ input {
 	height: 55px;
 }
 
-#todos .description{
-	width:100px;
+#todos .description {
+	width: 100px;
 }
 
-#todos .priority{
-	width:30px;
+#todos .priority {
+	width: 30px;
 }
-#todos .created, #todos .deadline{
-	width:100px;
+
+#todos .created, #todos .deadline {
+	width: 100px;
 }
-#todos .done, #todos .delete,#todos .archive,#todos .modify{
-	width:30px;
+
+#todos .done, #todos .delete, #todos .archive, #todos .modify {
+	width: 30px;
 }
 
 #todos tr:nth-child(even) {
@@ -174,24 +185,13 @@ a {
 .topnav {
 	overflow: hidden;
 	background-color: #4CAF50;
-	width:90%;
-	margin:auto;
-	border-bottom-left-radius:20%;
-	border-bottom-right-radius:20%;
+	width: 90%;
+	margin: auto;
+	border-bottom-left-radius: 20%;
+	border-bottom-right-radius: 20%;
 }
 
-.footer {
-	margin:50px;
-	padding-top:20px;
-	overflow: hidden;
-	background-color: #4CAF50;
-	width:90%;
-	margin:auto;
-	border-top-left-radius:20%;
-	border-top-right-radius:20%;
-}
-
-.topnav a,.logout {
+.topnav a, .logout {
 	float: left;
 	display: block;
 	color: #f2f2f2;
@@ -201,8 +201,8 @@ a {
 	user-select: none;
 }
 
-.logout{
-	float:right!important;
+.logout {
+	float: right !important;
 }
 
 .topnav a:hover {
@@ -211,9 +211,9 @@ a {
 }
 
 .content {
-	padding-top:15px;
+	padding-top: 15px;
 }
 
-.priority,#newTodo {
-	user-select:none;
+.priority, #newTodo {
+	user-select: none;
 }

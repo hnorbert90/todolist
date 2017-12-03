@@ -9,20 +9,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TokenService {
 	private static ArrayList<Integer> tokens = new ArrayList<>();
-	
-	@RequestMapping(path="/auth/requestToken", produces = "plain/text")
+
+	@RequestMapping(path = "/auth/requestToken", produces = "plain/text")
 	public String getToken() {
-		Integer token=generateToken();
+		Integer token = generateToken();
 		tokens.add(token);
 		return token.toString();
 	}
 
 	private Integer generateToken() {
-		   return (int) (Math.random()*10000000);
-		}
+		return (int) (Math.random() * 10000000);
+	}
+
 	public static boolean exchangeToken(String token) {
-		System.out.println(tokens.size()+"\t token:"+token);
-		Integer integ=Integer.parseInt(token);
+		System.out.println(tokens.size() + "\t token:" + token);
+		Integer integ = Integer.parseInt(token);
 		return tokens.remove(integ);
 	}
 }

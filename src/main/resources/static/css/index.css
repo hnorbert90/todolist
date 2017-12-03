@@ -1,16 +1,17 @@
-#content{
-	position:absolute;
-	margin-top:10%;
-	margin-left:25%;
-	text-align:center;
-	background-color:#808080;
-	padding:50px;
-	border-radius:10px;
-	box-shadow:10px 10px 10px #c0c0c0;
-	color:white;
-	user-select:none;
+#content {
+	position: absolute;
+	margin-top: 10%;
+	margin-left: 25%;
+	text-align: center;
+	background-color: #808080;
+	padding: 50px;
+	border-radius: 10px;
+	box-shadow: 10px 10px 10px #c0c0c0;
+	color: white;
+	user-select: none;
+	text-align: center
 }
 
-#my-signin2{
-	margin-left:25%;
+#my-signin2 {
+	margin-left: 25%;
 }
