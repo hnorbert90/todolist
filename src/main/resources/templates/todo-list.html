@@ -3,7 +3,7 @@
   <head>
     <meta name="google-signin-client_id"
       content="35578136108-q4vpbt1u0nbl2l9g55fg4v2p39h98pea.apps.googleusercontent.com" />
-    <title>ToDo</title>
+    <title>Task list</title>
     <link rel="stylesheet" type="text/css" media="all"  
       href="../static/css/todo-list.css" th:href="@{/css/todo-list.css}" />
   </head>
@@ -60,7 +60,7 @@
     </div>
     <div id="newTodo" >
       <span>
-        <h3>Create new todo</h3>
+        <h3>Create new Task</h3>
       </span>
       <form th:action="@{'~/'+${user.id}+'/todo/new'}" method="post">
         <input type="text" name="description" maxlength="10" class="desc" placeholder="Description" required="required"/>
@@ -68,7 +68,7 @@
         <input type="date" class="deadline" name="deadline" value="" max="2050-12-31"/>
         <label>Priority</label>
         <input type="number" name="priority" value="1" required="required" min="0" max="10"/>
-        <textarea rows="4" cols="50" name="details" placeholder="Details..." maxlength="50"/>
+        <textarea rows="4" cols="50" name="details" placeholder="Details..." maxlength="50" />
         <br/>
         <div><button class="button" type="submit" value="Add" id="add" style="float:left;">Add</button><a class="button" onclick="newTodoClose();" style="float:right;margin-right:60px;">Cancel</a></div>
       </form>

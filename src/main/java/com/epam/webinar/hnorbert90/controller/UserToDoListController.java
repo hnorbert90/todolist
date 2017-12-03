@@ -269,7 +269,6 @@ public class UserToDoListController {
 			ToDoArchived todoArchived = convertToArchivedToDo(element);
 			todoArchived.setUser(user);
 			archTodo.add(todoArchived);
-
 		}
 		return archTodo;
 	}
@@ -287,6 +286,7 @@ public class UserToDoListController {
 		converted.setDetails(todo.getDetails());
 		return converted;
 	}
+
 	/**
 	 * Restore an archived task from the archived list.
 	 */
@@ -309,6 +309,7 @@ public class UserToDoListController {
 		}
 		return todo;
 	}
+
 	/**
 	 * Convert ToDoArchived to ToDo
 	 */

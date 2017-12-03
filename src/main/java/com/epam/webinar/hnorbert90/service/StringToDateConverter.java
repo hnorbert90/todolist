@@ -23,6 +23,8 @@ public class StringToDateConverter implements Converter<String, Date> {
 }
 
 class DateParseException extends RuntimeException {
+	private static final long serialVersionUID = 1L;
+
 	public DateParseException() {
 		super("Please check the date format, it should be YYYY-MM-DD");
 	}

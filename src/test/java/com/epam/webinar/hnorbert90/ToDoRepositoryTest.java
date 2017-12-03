@@ -93,7 +93,7 @@ public class ToDoRepositoryTest {
 		String email = "test@epam.com";
 		pageRequest = new PageRequest(0, 10);
 		User user = userRepository.findOne(new Long(email.hashCode()));
-		Page todos = toDoRepository.findByUser_Id(pageRequest.first(), user.getId());
+		Page<ToDo> todos = toDoRepository.findByUser_Id(pageRequest.first(), user.getId());
 		ToDo firstTodo = (ToDo) todos.getContent().get(0);
 		assertThat(firstTodo).isNotNull();
 		logger.debug("Todo: {}", firstTodo);

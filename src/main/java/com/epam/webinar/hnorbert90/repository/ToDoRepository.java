@@ -4,11 +4,9 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import com.epam.webinar.hnorbert90.domain.ToDo;
-import com.epam.webinar.hnorbert90.domain.ToDoArchived;
 
 public interface ToDoRepository extends CrudRepository<ToDo, Long> {
 	Page<ToDo> findByUser_IdOrderByCreatedDesc(Pageable pageable, Long userId);
