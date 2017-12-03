@@ -46,10 +46,10 @@
                 <input type="number" name="id" th:value="${todo.id}" style="display:none"/>
                 <input type="text" name="description" maxlength="10" class="desc" placeholder="Description" required="required" th:value="${todo.description}"/>
                 <label>Deadline</label>
-                <input type="date" class="deadline" name="deadline" th:value="${todo.deadline}"/>
+                <input type="date" class="deadline" name="deadline"  max="2050-12-31" th:value="${todo.deadline}"/>
                 <label>Priority</label>
                 <input type="number" name="priority" th:value="${todo.priority}" required="required" min="0" max="10"/><br/>
-                <textarea rows="4" cols="50" name="details" th:text="${todo.details}"/>
+                <textarea rows="4" cols="50" name="details" maxlength="50" th:text="${todo.details}"/>
                 <button type="submit" value="Update" th:onclick="'setInVisibleUpdateField(\'' + ${todo.id} + '\');'">Update</button>
               </form>
             </div>
@@ -65,10 +65,10 @@
       <form th:action="@{'~/'+${user.id}+'/todo/new'}" method="post">
         <input type="text" name="description" maxlength="10" class="desc" placeholder="Description" required="required"/>
         <label>Deadline</label>
-        <input type="date" class="deadline" name="deadline" value=""/>
+        <input type="date" class="deadline" name="deadline" value="" max="2050-12-31"/>
         <label>Priority</label>
         <input type="number" name="priority" value="1" required="required" min="0" max="10"/>
-        <textarea rows="4" cols="50" name="details" placeholder="Details..."/>
+        <textarea rows="4" cols="50" name="details" placeholder="Details..." maxlength="50"/>
         <br/>
         <div><button class="button" type="submit" value="Add" id="add" style="float:left;">Add</button><a class="button" onclick="newTodoClose();" style="float:right;margin-right:60px;">Cancel</a></div>
       </form>

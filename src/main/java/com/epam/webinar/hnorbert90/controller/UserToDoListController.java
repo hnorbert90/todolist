@@ -24,6 +24,10 @@ import com.epam.webinar.hnorbert90.repository.ToDoArchivedRepository;
 import com.epam.webinar.hnorbert90.repository.ToDoRepository;
 import com.epam.webinar.hnorbert90.repository.UserRepository;
 
+/**
+ * This controller is responsible for displaying editing, creating, deleting,
+ * and sorting user's task list.
+ */
 @Controller
 public class UserToDoListController {
 	@Autowired
@@ -36,6 +40,55 @@ public class UserToDoListController {
 	@Value(value = "${todo.elementPerPage}")
 	private int elementPerPage;
 
+	/**
+	 * Lists the user's tasks in ordered sequence.
+	 */
+	@RequestMapping(value = "/{userId}/todo")
+	public String displayToDoList(Model model, Pageable page, @RequestParam(value = "order") String order,
+			@PathVariable("userId") Long userId) {
+		if (page.getPageSize() < 1 || page.getPageSize() > elementPerPage) {
+			page = new PageRequest(0, elementPerPage);
+		}
+		User user = userRepo.findOne(userId);
+
+		switch (order) {
+		case "orderbycreatedasc":
+			model.addAttribute("todolist", fillPage(page, todoRepo.findByUser_IdOrderByCreatedAsc(page, user.getId())));
+
+			break;
+		case "orderbycreatedddesc":
+			model.addAttribute("todolist", fillPage(page, todoRepo.findByUser_IdOrderByCreatedDesc(page, userId)));
+
+			break;
+		case "orderbypriorityasc":
+			model.addAttribute("todolist", fillPage(page, todoRepo.findByUser_IdOrderByPriorityAsc(page, userId)));
+
+			break;
+		case "orderbyprioritydesc":
+			model.addAttribute("todolist", fillPage(page, todoRepo.findByUser_IdOrderByPriorityDesc(page, userId)));
+
+			break;
+		case "orderbydeadlineasc":
+			model.addAttribute("todolist", fillPage(page, todoRepo.findByUser_IdOrderByDeadlineAsc(page, userId)));
+
+			break;
+		case "orderbydeadlinedesc":
+			model.addAttribute("todolist", fillPage(page, todoRepo.findByUser_IdOrderByDeadlineDesc(page, userId)));
+
+			break;
+		default:
+			model.addAttribute("todolist",
+					fillPage(page, todoRepo.findByUser_IdOrderByDoneAscPriorityDesc(page, userId)));
+
+			break;
+		}
+		model.addAttribute("user", user);
+		return "todo-list";
+	}
+
+	/**
+	 * fills the page with empty records
+	 */
 	private Page<ToDo> fillPage(Pageable page, Page<ToDo> todo) {
 		Page<ToDo> requestedPage = todo;
 		List<ToDo> todoList = new ArrayList<>(requestedPage.getContent());
@@ -45,55 +98,9 @@ public class UserToDoListController {
 		return requestedPage = new PageImpl<ToDo>(todoList, page, requestedPage.getTotalElements());
 	}
 
-	@RequestMapping(value = "/{userId}/todo")
-	public String displayToDoList(Model model, Pageable page, @RequestParam(value="order") String order,
-			@PathVariable("userId") Long userId) {
-		if (page.getPageSize() < 1 || page.getPageSize() > elementPerPage) {
-			page = new PageRequest(0, elementPerPage);
-		}
-		User user = userRepo.findOne(userId);
-
-		switch (order) {
-		case "orderbycreatedasc":
-			model.addAttribute("todolist",
-					fillPage(page, todoRepo.findByUser_IdOrderByCreatedAsc(page, user.getId())));
-	
-			break;
-		case "orderbycreatedddesc":
-			model.addAttribute("todolist",
-					fillPage(page, todoRepo.findByUser_IdOrderByCreatedDesc(page, userId)));
-
-			break;
-		case "orderbypriorityasc":
-			model.addAttribute("todolist",
-					fillPage(page, todoRepo.findByUser_IdOrderByPriorityAsc(page, userId)));
-		
-			break;
-		case "orderbyprioritydesc":
-			model.addAttribute("todolist",
-					fillPage(page, todoRepo.findByUser_IdOrderByPriorityDesc(page, userId)));
-	
-			break;
-		case "orderbydeadlineasc":
-			model.addAttribute("todolist",
-					fillPage(page, todoRepo.findByUser_IdOrderByDeadlineAsc(page, userId)));
-		
-			break;
-		case "orderbydeadlinedesc":
-			model.addAttribute("todolist",
-					fillPage(page, todoRepo.findByUser_IdOrderByDeadlineDesc(page, userId)));
-		
-			break;
-		default:
-			model.addAttribute("todolist",
-					fillPage(page, todoRepo.findByUser_IdOrderByDoneAscPriorityDesc(page, userId)));
-		
-			break;
-		}
-		model.addAttribute("user", user);
-		return "todo-list";
-	}
-
+	/**
+	 * Marks as completed task
+	 */
 	@RequestMapping(value = "/{userId}/todo/edit/setdone/{id}")
 	public String setDone(@PathVariable Long id, @PathVariable("userId") Long userId) {
 		ToDo todo = todoRepo.findOne(id);
@@ -102,6 +109,9 @@ public class UserToDoListController {
 		return "redirect:/" + userId + "/todo?order=default";
 	}
 
+	/**
+	 * Created new task.
+	 */
 	@RequestMapping(value = "/{userId}/todo/new", method = RequestMethod.POST)
 	public String newTodo(@RequestParam("description") String description, @RequestParam("details") String details,
 			@RequestParam("priority") int priority, @RequestParam(value = "deadline", required = false) Date deadline,
@@ -114,6 +124,9 @@ public class UserToDoListController {
 		return "redirect:/" + userId + "/todo?order=default";
 	}
 
+	/**
+	 * Updates a task.
+	 */
 	@RequestMapping(value = "/{userId}/todo/update", method = RequestMethod.POST)
 	public String updateTodo(@RequestParam("description") String description, @RequestParam("details") String details,
 			@RequestParam("priority") int priority, @RequestParam("id") Long id,
@@ -127,6 +140,9 @@ public class UserToDoListController {
 		return "redirect:/" + userId + "/todo?order=default";
 	}
 
+	/**
+	 * Increasing a task priority
+	 */
 	@RequestMapping("/{userId}/todo/edit/increasepriority/{id}")
 	public String increasePriority(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
 		ToDo todo = todoRepo.findOne(id);
@@ -135,6 +151,9 @@ public class UserToDoListController {
 		return "redirect:/" + userId + "/todo?order=default";
 	}
 
+	/**
+	 * Decreasing a task priority
+	 */
 	@RequestMapping("/{userId}/todo/edit/decreasepriority/{id}")
 	public String decreasePriority(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
 		ToDo todo = todoRepo.findOne(id);
@@ -143,61 +162,70 @@ public class UserToDoListController {
 		return "redirect:/" + userId + "/todo?order=default";
 	}
 
+	/**
+	 * Delete a task by id.
+	 */
 	@RequestMapping("/{userId}/todo/delete/{id}")
 	public String deleteTodo(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
 		todoRepo.delete(id);
 		return "redirect:/" + userId + "/todo?order=default";
 	}
 
+	/**
+	 * Lists the archived tasks in ordered sequence.
+	 */
 	@RequestMapping(value = "/{userId}/todo/archived")
-	public String displayToDoArchivedListOrderByCreated(Model model, Pageable page, @RequestParam(value="order") String order,
-			@PathVariable("userId") Long userId) {
+	public String displayToDoArchivedListOrderByCreated(Model model, Pageable page,
+			@RequestParam(value = "order") String order, @PathVariable("userId") Long userId) {
 		if (page.getPageSize() < 1 || page.getPageSize() > elementPerPage) {
 			page = new PageRequest(0, elementPerPage);
 		}
 		User user = userRepo.findOne(userId);
-	
+
 		switch (order) {
 		case "orderbycreatedasc":
 			model.addAttribute("todolist",
 					fillPageArchived(page, todoArchivedRepo.findByUser_IdOrderByCreatedAsc(page, user.getId())));
-				
+
 			break;
 		case "orderbycreatedddesc":
 			model.addAttribute("todolist",
 					fillPageArchived(page, todoArchivedRepo.findByUser_IdOrderByCreatedDesc(page, userId)));
-		
+
 			break;
 		case "orderbypriorityasc":
 			model.addAttribute("todolist",
 					fillPageArchived(page, todoArchivedRepo.findByUser_IdOrderByPriorityAsc(page, userId)));
-		
+
 			break;
 		case "orderbyprioritydesc":
 			model.addAttribute("todolist",
 					fillPageArchived(page, todoArchivedRepo.findByUser_IdOrderByPriorityDesc(page, userId)));
-		
+
 			break;
 		case "orderbydeadlineasc":
 			model.addAttribute("todolist",
 					fillPageArchived(page, todoArchivedRepo.findByUser_IdOrderByDeadlineAsc(page, userId)));
-	
+
 			break;
 		case "orderbydeadlinedesc":
 			model.addAttribute("todolist",
 					fillPageArchived(page, todoArchivedRepo.findByUser_IdOrderByDeadlineDesc(page, userId)));
-	
+
 			break;
 		default:
 			model.addAttribute("todolist",
 					fillPageArchived(page, todoArchivedRepo.findByUser_IdOrderByDoneAscPriorityDesc(page, userId)));
-		
+
 			break;
 		}
 		model.addAttribute("user", user);
 		return "todo-list";
 	}
 
+	/**
+	 * fills the page with empty records
+	 */
 	private Page<ToDoArchived> fillPageArchived(Pageable page, Page<ToDoArchived> todo) {
 		Page<ToDoArchived> requestedPage = todo;
 		List<ToDoArchived> todoList = new ArrayList<>(requestedPage.getContent());
@@ -207,37 +235,48 @@ public class UserToDoListController {
 		return requestedPage = new PageImpl<ToDoArchived>(todoList, page, requestedPage.getTotalElements());
 	}
 
+	/**
+	 * Archive a task by id.
+	 */
 	@RequestMapping("/{userId}/todo/archive/{id}")
 	public String archiveTodoById(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
 		ToDoArchived todo = convertToArchivedToDo(todoRepo.findOne(id));
 		todo.setUser(userRepo.findOne(userId));
 		todoArchivedRepo.save(todo);
-
 		todoRepo.delete(id);
 		return "redirect:/" + userId + "/todo?order=default";
 	}
 
+	/**
+	 * Archive all task which is marked as completed.
+	 */
 	@RequestMapping("/{userId}/todo/archive/done")
 	public String archiveAllDoneTodo(@PathVariable("userId") Long userId) {
 		List<ToDo> doneTodos = todoRepo.findAllByDone(true);
 		User user = userRepo.findOne(userId);
-		List<ToDoArchived> todo =convertToArchivedToDoList(doneTodos,user);
+		List<ToDoArchived> todo = convertToArchivedToDoList(doneTodos, user);
 		todoArchivedRepo.save(todo);
 		todoRepo.delete(doneTodos);
 		return "redirect:/" + userId + "/todo?order=default";
 	}
 
-	private List<ToDoArchived> convertToArchivedToDoList(List<ToDo> todo,User user) {
+	/**
+	 * Converts ToDo list to ToDoArchived list.
+	 */
+	private List<ToDoArchived> convertToArchivedToDoList(List<ToDo> todo, User user) {
 		ArrayList<ToDoArchived> archTodo = new ArrayList<>();
 		for (ToDo element : todo) {
 			ToDoArchived todoArchived = convertToArchivedToDo(element);
 			todoArchived.setUser(user);
 			archTodo.add(todoArchived);
-			
+
 		}
 		return archTodo;
 	}
 
+	/**
+	 * Converts ToDoArchived to ToDo.
+	 */
 	private ToDoArchived convertToArchivedToDo(ToDo todo) {
 		ToDoArchived converted = new ToDoArchived();
 		converted.setCreated(todo.getCreated());
@@ -248,7 +287,9 @@ public class UserToDoListController {
 		converted.setDetails(todo.getDetails());
 		return converted;
 	}
-
+	/**
+	 * Restore an archived task from the archived list.
+	 */
 	@RequestMapping("/{userId}/todo/archived/restore/{id}")
 	public String restoreArchiveTodoById(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
 		ToDo todo = convertBackToToDo(todoArchivedRepo.findOne(id));
@@ -258,6 +299,9 @@ public class UserToDoListController {
 		return "redirect:/" + userId + "/todo/archived?order=default";
 	}
 
+	/**
+	 * Converts ToDoArchived list to ToDo list. //Not used yet
+	 */
 	private List<ToDo> convertBackToToDoList(List<ToDoArchived> archTodo) {
 		ArrayList<ToDo> todo = new ArrayList<>();
 		for (ToDoArchived element : archTodo) {
@@ -265,7 +309,9 @@ public class UserToDoListController {
 		}
 		return todo;
 	}
-
+	/**
+	 * Convert ToDoArchived to ToDo
+	 */
 	private ToDo convertBackToToDo(ToDoArchived archtodo) {
 		ToDo converted = new ToDo();
 		converted.setCreated(archtodo.getCreated());
